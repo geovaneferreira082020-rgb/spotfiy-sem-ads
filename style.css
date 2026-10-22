@@ -1,0 +1,1119 @@
+/* ==========================================================================
+   Spotfiy — tema escuro inspirado no Spotify Web
+   Sumário: 1. Base  2. Botões e campos  3. Login  4. Layout do app
+            5. Sidebar  6. Conteúdo e lista  7. Player  8. Aviso (toast)
+            9. Responsivo
+   ========================================================================== */
+
+/* ---------- 1. Base ---------- */
+
+:root {
+  --bg-base: #000000;     /* fundo atrás dos painéis */
+  --bg-main: #121212;     /* fundo principal */
+  --bg-card: #181818;     /* cards, menus, sidebar e player */
+  --bg-hover: #282828;
+  --bg-track: #4d4d4d;    /* parte vazia dos sliders */
+  --accent: #1db954;
+  --accent-bright: #1ed760;
+  --text: #ffffff;
+  --text-muted: #b3b3b3;
+  --error: #f15e6c;
+
+  --radius: 8px;
+  --sidebar-width: 280px;
+  --font: "Circular Std", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg-base);
+  color: var(--text);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+/* O atributo hidden perde para "display: flex/grid" se não for forçado. */
+[hidden] {
+  display: none !important;
+}
+
+:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.icon {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- 2. Botões e campos ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 32px;
+  border-radius: 500px;
+  font-weight: 700;
+  transition: transform 0.1s, background-color 0.2s;
+}
+
+.btn:hover:not(:disabled) {
+  transform: scale(1.03);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #000000;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-bright);
+}
+
+.btn-light {
+  background: var(--text);
+  color: #000000;
+}
+
+.link-btn {
+  color: var(--text);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.link-btn:hover {
+  color: var(--accent);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.field input {
+  padding: 12px 14px;
+  border: 1px solid #727272;
+  border-radius: 4px;
+  background: var(--bg-main);
+  color: var(--text);
+  font: inherit;
+  font-weight: 400;
+}
+
+.field input::placeholder {
+  color: var(--text-muted);
+}
+
+.field input:hover {
+  border-color: var(--text);
+}
+
+.field input:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 0;
+}
+
+.form-error {
+  color: var(--error);
+  font-size: 0.875rem;
+}
+
+/* ---------- 3. Login e cadastro ---------- */
+
+.auth {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 24px;
+  background: linear-gradient(180deg, #1f1f1f 0%, var(--bg-base) 100%);
+}
+
+.auth-card {
+  width: min(100%, 420px);
+  padding: 40px 32px;
+  border-radius: var(--radius);
+  background: var(--bg-card);
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  font-size: 1.75rem;
+  letter-spacing: -0.03em;
+}
+
+.auth-brand .icon {
+  width: 36px;
+  height: 36px;
+  color: var(--accent);
+}
+
+.auth-title {
+  margin-bottom: 20px;
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-switch {
+  margin-top: 24px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* ---------- 4. Layout do app ---------- */
+
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 8px;
+  height: 100vh;
+  height: 100dvh;
+  padding: 8px;
+  background: var(--bg-base);
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+
+.main {
+  min-height: 0;
+  overflow-y: auto;
+  border-radius: var(--radius);
+  background-color: var(--bg-main);
+  /* O degradê do topo usa "local" para rolar junto com o conteúdo, como no Spotify. */
+  background-image: linear-gradient(180deg, var(--hero) 0%, transparent 100%);
+  background-size: 100% 360px;
+  background-repeat: no-repeat;
+  background-attachment: local;
+  scrollbar-width: thin;
+  scrollbar-color: #535353 transparent;
+}
+
+.main[data-view="all"] {
+  --hero: #1d4a31;
+}
+
+.main[data-view="liked"] {
+  --hero: #4a3a9a;
+}
+
+.player {
+  grid-column: 1 / -1;
+}
+
+/* ---------- 5. Sidebar ---------- */
+
+.sidebar-card {
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  background: var(--bg-card);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brand .icon {
+  color: var(--accent);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding: 10px 12px;
+  color: var(--text-muted);
+  font-weight: 700;
+  transition: color 0.2s;
+}
+
+.nav-item:hover,
+.nav-item.is-active {
+  color: var(--text);
+}
+
+.library {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.library-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.library-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  text-align: left;
+}
+
+.library-item:hover,
+.library-item.is-active {
+  background: var(--bg-hover);
+}
+
+.liked-tile {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #450af5, #c4efd9);
+}
+
+.library-item-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.library-item-title {
+  font-weight: 700;
+}
+
+.library-item-sub {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* ---------- 6. Conteúdo e lista de músicas ---------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 64px;
+  padding: 0 24px;
+  transition: background-color 0.2s;
+}
+
+/* O script.js adiciona esta classe quando a página já rolou, para a barra não ficar transparente sobre as faixas. */
+.topbar.is-scrolled {
+  background: var(--bg-main);
+}
+
+.search {
+  position: relative;
+  flex: 0 1 364px;
+}
+
+.search .icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.search input {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  border: 2px solid transparent;
+  border-radius: 500px;
+  background: var(--bg-hover);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.search input::placeholder {
+  color: var(--text-muted);
+}
+
+.search input:focus {
+  border-color: var(--text);
+  outline: none;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 4px;
+  border-radius: 500px;
+  background: rgba(0, 0, 0, 0.5);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg-hover);
+  color: var(--text-muted);
+}
+
+.avatar .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.user-name {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 500px;
+  background: rgba(0, 0, 0, 0.5);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.logout-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+.logout-btn .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.content {
+  padding: 0 24px 32px;
+}
+
+.view-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 16px 0 24px;
+}
+
+.view-cover {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 160px;
+  height: 160px;
+  border-radius: 4px;
+  box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+}
+
+.view-cover .icon {
+  width: 72px;
+  height: 72px;
+}
+
+.main[data-view="all"] .view-cover {
+  background: linear-gradient(135deg, var(--accent), #0b5b27);
+}
+
+.main[data-view="liked"] .view-cover {
+  background: linear-gradient(135deg, #450af5, #c4efd9);
+}
+
+.main[data-view="all"] .icon-liked,
+.main[data-view="liked"] .icon-all {
+  display: none;
+}
+
+.view-title {
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.view-subtitle {
+  margin-top: 8px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* Cabeçalho e linhas compartilham as mesmas colunas: título | gênero | coração */
+.track-header,
+.track {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px 48px;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.track-header {
+  height: 36px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.th-title {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+}
+
+.th-index {
+  text-align: center;
+}
+
+.track {
+  height: 56px;
+  border-radius: 4px;
+}
+
+.track:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.track-play {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+}
+
+.track-index {
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.track-play-icon {
+  display: none;
+  width: 18px;
+  height: 18px;
+  color: var(--text);
+}
+
+.track-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.track-cover {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  background: var(--bg-hover);
+  object-fit: cover;
+}
+
+.track-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.track-title,
+.track-artist {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track-artist {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.track:hover .track-artist {
+  color: var(--text);
+}
+
+.track-genre {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* Hover mostra o ícone de play no lugar do número. */
+.track:hover:not(.is-current) .track-number {
+  display: none;
+}
+
+.track:hover:not(.is-current) .track-play-icon {
+  display: block;
+}
+
+/* Música atual: título verde e equalizador no lugar do número. */
+.track.is-current .track-title {
+  color: var(--accent);
+}
+
+.track.is-current .track-number {
+  display: none;
+}
+
+.track.is-current .equalizer {
+  display: flex;
+}
+
+.equalizer {
+  display: none;
+  align-items: flex-end;
+  gap: 2px;
+  width: 14px;
+  height: 14px;
+}
+
+.equalizer i {
+  flex: 1;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: bottom;
+  animation: equalize 1s ease-in-out infinite;
+  animation-play-state: paused; /* pausado = barras congeladas em alturas diferentes */
+}
+
+.equalizer i:nth-child(1) { animation-delay: -0.2s; }
+.equalizer i:nth-child(2) { animation-delay: -0.7s; }
+.equalizer i:nth-child(3) { animation-delay: -0.4s; }
+.equalizer i:nth-child(4) { animation-delay: -0.9s; }
+
+.track.is-playing .equalizer i {
+  animation-play-state: running;
+}
+
+@keyframes equalize {
+  0%, 100% { transform: scaleY(0.25); }
+  50% { transform: scaleY(1); }
+}
+
+/* Botão de coração (lista e player) */
+.like-btn {
+  display: grid;
+  flex: none;
+  place-items: center;
+  justify-self: center;
+  width: 32px;
+  height: 32px;
+  color: var(--text-muted);
+  transition: color 0.2s, transform 0.1s;
+}
+
+.like-btn .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.like-btn:hover:not(:disabled) {
+  color: var(--text);
+  transform: scale(1.1);
+}
+
+.like-btn.is-liked,
+.like-btn.is-liked:hover {
+  color: var(--accent);
+}
+
+.like-btn:disabled {
+  opacity: 0.4;
+}
+
+/* Na lista, o coração vazio só aparece ao passar o mouse (no toque, fica sempre visível). */
+.track .like-btn:not(.is-liked) {
+  opacity: 0;
+}
+
+.track:hover .like-btn,
+.track .like-btn:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .track .like-btn:not(.is-liked) {
+    opacity: 1;
+  }
+}
+
+.list-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 56px 16px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ---------- 7. Player ---------- */
+
+.player {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 40%) minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  background: var(--bg-card);
+}
+
+.player-track {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.player-cover {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 4px;
+  background: var(--bg-hover);
+  object-fit: cover;
+}
+
+.player-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.player-title,
+.player-artist {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-title {
+  font-size: 0.875rem;
+}
+
+.player-artist {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.player-center {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.icon-btn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.icon-btn:hover {
+  color: var(--text);
+}
+
+.icon-btn .icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Shuffle e repeat ligados: ícone verde com um pontinho embaixo. */
+.icon-btn.is-active {
+  color: var(--accent);
+}
+
+.icon-btn.is-active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translateX(-50%);
+}
+
+.play-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--text);
+  color: #000000;
+  transition: transform 0.1s;
+}
+
+.play-btn:hover {
+  transform: scale(1.06);
+}
+
+.play-btn .icon {
+  width: 22px;
+  height: 22px;
+}
+
+.seek {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.time {
+  min-width: 40px;
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.time-current {
+  text-align: right;
+}
+
+.player-extra {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.player-extra .slider {
+  width: 100px;
+}
+
+/* Slider de progresso e de volume. O script.js define --fill (0% a 100%). */
+.slider {
+  --fill: 0%;
+  --fill-color: var(--text);
+  flex: 1;
+  height: 12px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.slider:hover:not(:disabled),
+.slider:focus-visible {
+  --fill-color: var(--accent);
+}
+
+.slider:disabled {
+  cursor: default;
+}
+
+.slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--fill-color) var(--fill), var(--bg-track) var(--fill));
+}
+
+.slider::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--fill-color) var(--fill), var(--bg-track) var(--fill));
+}
+
+.slider::-webkit-slider-thumb {
+  width: 12px;
+  height: 12px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: var(--text);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--text);
+  opacity: 0;
+}
+
+.slider:hover:not(:disabled)::-webkit-slider-thumb,
+.slider:focus-visible::-webkit-slider-thumb {
+  opacity: 1;
+}
+
+.slider:hover:not(:disabled)::-moz-range-thumb,
+.slider:focus-visible::-moz-range-thumb {
+  opacity: 1;
+}
+
+/* ---------- 8. Aviso (toast) ---------- */
+
+.toast {
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  z-index: 20;
+  max-width: min(90vw, 480px);
+  padding: 12px 20px;
+  border-radius: 8px;
+  background: var(--text);
+  color: #000000;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 12px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------- 9. Responsivo ---------- */
+
+@media (max-width: 1023px) {
+  :root {
+    --sidebar-width: 220px;
+  }
+
+  .player {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 45%) minmax(0, 0.6fr);
+  }
+}
+
+/* Celular: a sidebar vira uma faixa de botões no topo e o player ganha três linhas. */
+@media (max-width: 768px) {
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .sidebar {
+    flex-direction: row;
+    gap: 6px;
+  }
+
+  .sidebar-card {
+    display: flex;
+    gap: 6px;
+    padding: 0;
+    background: none;
+  }
+
+  .brand,
+  .library-title,
+  .library-item-sub,
+  .liked-tile,
+  .nav-item .icon {
+    display: none;
+  }
+
+  .nav-item,
+  .library-item {
+    width: auto;
+    padding: 8px 16px;
+    border-radius: 500px;
+    background: var(--bg-card);
+    font-size: 0.875rem;
+    color: var(--text);
+  }
+
+  .nav-item.is-active,
+  .library-item.is-active {
+    background: var(--accent);
+    color: #000000;
+  }
+
+  .library {
+    flex: none;
+    overflow: visible;
+  }
+
+  .main {
+    grid-row: 2;
+  }
+
+  .player {
+    grid-row: 3;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .player-center {
+    display: contents; /* transporte e barra de progresso viram linhas do próprio player */
+  }
+
+  .player-extra,
+  .track-genre,
+  .th-genre {
+    display: none;
+  }
+
+  .topbar {
+    padding: 0 12px;
+  }
+
+  .user-name,
+  .logout-btn span {
+    display: none;
+  }
+
+  .content {
+    padding: 0 12px 24px;
+  }
+
+  .view-header {
+    gap: 16px;
+  }
+
+  .view-cover {
+    width: 96px;
+    height: 96px;
+  }
+
+  .view-cover .icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .track-header,
+  .track {
+    grid-template-columns: minmax(0, 1fr) 40px;
+    padding: 0 8px;
+  }
+
+  .toast {
+    bottom: 170px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+
+  .equalizer i {
+    animation: none;
+    transform: scaleY(0.6);
+  }
+}

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#121212">
+  <title>Spotfiy</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ícones reutilizáveis: cada <use href="#icon-..."> no resto da página aponta para um destes. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+    <symbol id="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></symbol>
+    <symbol id="icon-prev" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></symbol>
+    <symbol id="icon-next" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></symbol>
+    <symbol id="icon-shuffle" viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></symbol>
+    <symbol id="icon-repeat" viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></symbol>
+    <symbol id="icon-repeat-one" viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-4-2V9h-1l-2 1v1h1.5v4H13z"/></symbol>
+    <symbol id="icon-volume-high" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></symbol>
+    <symbol id="icon-volume-low" viewBox="0 0 24 24"><path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5z"/></symbol>
+    <symbol id="icon-volume-off" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></symbol>
+    <symbol id="icon-heart-filled" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></symbol>
+    <symbol id="icon-heart-outline" viewBox="0 0 24 24"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></symbol>
+    <symbol id="icon-home" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></symbol>
+    <symbol id="icon-library" viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 5h-3v5.5c0 1.38-1.12 2.5-2.5 2.5S10 13.88 10 12.5s1.12-2.5 2.5-2.5c.57 0 1.08.19 1.5.51V5h4v2zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"/></symbol>
+    <symbol id="icon-user" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
+    <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></symbol>
+    <symbol id="icon-music" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></symbol>
+  </svg>
+
+  <!-- TELA 1: LOGIN / CADASTRO -->
+  <section id="auth-view" class="auth" hidden>
+    <div class="auth-card">
+      <h1 class="auth-brand">
+        <svg class="icon" aria-hidden="true"><use href="#icon-music"/></svg>
+        Spotfiy
+      </h1>
+
+      <div id="login-box">
+        <h2 class="auth-title">Entrar no Spotfiy</h2>
+        <form id="login-form" class="auth-form">
+          <label class="field">
+            <span>E-mail</span>
+            <input type="email" name="email" placeholder="nome@exemplo.com" autocomplete="email" required>
+          </label>
+          <label class="field">
+            <span>Senha</span>
+            <input type="password" name="password" placeholder="Sua senha" autocomplete="current-password" required>
+          </label>
+          <p id="login-error" class="form-error" role="alert" hidden></p>
+          <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+        <p class="auth-switch">
+          Não tem uma conta?
+          <button type="button" id="show-register" class="link-btn">Cadastre-se</button>
+        </p>
+      </div>
+
+      <div id="register-box" hidden>
+        <h2 class="auth-title">Criar sua conta</h2>
+        <form id="register-form" class="auth-form">
+          <label class="field">
+            <span>Nome de usuário</span>
+            <input type="text" name="username" placeholder="Como devemos te chamar?" autocomplete="username" minlength="3" maxlength="30" required>
+          </label>
+          <label class="field">
+            <span>E-mail</span>
+            <input type="email" name="email" placeholder="nome@exemplo.com" autocomplete="email" required>
+          </label>
+          <label class="field">
+            <span>Senha</span>
+            <input type="password" name="password" placeholder="Mínimo de 8 caracteres" autocomplete="new-password" minlength="8" maxlength="72" required>
+          </label>
+          <p id="register-error" class="form-error" role="alert" hidden></p>
+          <button type="submit" class="btn btn-primary">Cadastrar</button>
+        </form>
+        <p class="auth-switch">
+          Já tem uma conta?
+          <button type="button" id="show-login" class="link-btn">Entre aqui</button>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TELA 2: APLICATIVO -->
+  <div id="app-view" class="app" hidden>
+
+    <aside class="sidebar">
+      <nav class="sidebar-card" aria-label="Principal">
+        <div class="brand">
+          <svg class="icon" aria-hidden="true"><use href="#icon-music"/></svg>
+          Spotfiy
+        </div>
+        <button type="button" class="view-link nav-item" data-target="all">
+          <svg class="icon" aria-hidden="true"><use href="#icon-home"/></svg>
+          <span>Início</span>
+        </button>
+      </nav>
+
+      <section class="sidebar-card library" aria-label="Sua biblioteca">
+        <h2 class="library-title">
+          <svg class="icon" aria-hidden="true"><use href="#icon-library"/></svg>
+          Sua Biblioteca
+        </h2>
+        <button type="button" class="view-link library-item" data-target="liked">
+          <span class="liked-tile" aria-hidden="true">
+            <svg class="icon" aria-hidden="true"><use href="#icon-heart-filled"/></svg>
+          </span>
+          <span class="library-item-text">
+            <span class="library-item-title">Músicas Curtidas</span>
+            <span id="liked-count" class="library-item-sub">Playlist • 0 músicas</span>
+          </span>
+        </button>
+      </section>
+    </aside>
+
+    <div id="main" class="main" data-view="all">
+      <header id="topbar" class="topbar">
+        <div class="search">
+          <label for="search-input" class="visually-hidden">Buscar por título, artista ou gênero</label>
+          <svg class="icon" aria-hidden="true"><use href="#icon-search"/></svg>
+          <input id="search-input" type="search" placeholder="O que você quer ouvir?" autocomplete="off">
+        </div>
+
+        <div class="user-menu">
+          <div class="user-chip">
+            <span class="avatar" aria-hidden="true">
+              <svg class="icon" aria-hidden="true"><use href="#icon-user"/></svg>
+            </span>
+            <span id="user-name" class="user-name"></span>
+          </div>
+          <button type="button" id="logout-btn" class="logout-btn">
+            <svg class="icon" aria-hidden="true"><use href="#icon-logout"/></svg>
+            <span>Sair</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="content">
+        <div class="view-header">
+          <div class="view-cover" aria-hidden="true">
+            <svg class="icon icon-all" aria-hidden="true"><use href="#icon-music"/></svg>
+            <svg class="icon icon-liked" aria-hidden="true"><use href="#icon-heart-filled"/></svg>
+          </div>
+          <div>
+            <h1 id="view-title" class="view-title">Todas as músicas</h1>
+            <p id="view-subtitle" class="view-subtitle"></p>
+          </div>
+        </div>
+
+        <div id="track-header" class="track-header" hidden>
+          <span class="th-title"><span class="th-index">#</span>Título</span>
+          <span class="th-genre">Gênero</span>
+          <span></span>
+        </div>
+
+        <ul id="track-list" class="track-list"></ul>
+
+        <div id="list-message" class="list-message" hidden>
+          <p id="list-message-text"></p>
+          <button type="button" id="list-retry-btn" class="btn btn-light" hidden>Tentar de novo</button>
+        </div>
+      </main>
+    </div>
+
+    <!-- Player fixo na parte de baixo -->
+    <footer class="player" aria-label="Player">
+      <div class="player-track">
+        <img id="player-cover" class="player-cover" alt="" width="56" height="56">
+        <div class="player-text">
+          <span id="player-title" class="player-title"></span>
+          <span id="player-artist" class="player-artist"></span>
+        </div>
+        <button type="button" id="player-like-btn" class="like-btn" aria-pressed="false" disabled>
+          <svg class="icon" aria-hidden="true"><use href="#icon-heart-outline"/></svg>
+        </button>
+      </div>
+
+      <div class="player-center">
+        <div class="transport">
+          <button type="button" id="shuffle-btn" class="icon-btn" aria-pressed="false" aria-label="Modo aleatório" title="Ativar modo aleatório">
+            <svg class="icon" aria-hidden="true"><use href="#icon-shuffle"/></svg>
+          </button>
+          <button type="button" id="prev-btn" class="icon-btn" aria-label="Anterior" title="Anterior">
+            <svg class="icon" aria-hidden="true"><use href="#icon-prev"/></svg>
+          </button>
+          <button type="button" id="play-btn" class="play-btn" aria-label="Tocar" title="Tocar">
+            <svg class="icon" aria-hidden="true"><use href="#icon-play"/></svg>
+          </button>
+          <button type="button" id="next-btn" class="icon-btn" aria-label="Próxima" title="Próxima">
+            <svg class="icon" aria-hidden="true"><use href="#icon-next"/></svg>
+          </button>
+          <button type="button" id="repeat-btn" class="icon-btn" aria-label="Repetir: desativado" title="Repetir: desativado">
+            <svg class="icon" aria-hidden="true"><use href="#icon-repeat"/></svg>
+          </button>
+        </div>
+
+        <div class="seek">
+          <span id="current-time" class="time time-current">0:00</span>
+          <input id="progress" class="slider" type="range" min="0" max="0" step="any" value="0" aria-label="Progresso da música" disabled>
+          <span id="duration" class="time">0:00</span>
+        </div>
+      </div>
+
+      <div class="player-extra">
+        <button type="button" id="mute-btn" class="icon-btn" aria-label="Silenciar" title="Silenciar">
+          <svg class="icon" aria-hidden="true"><use href="#icon-volume-high"/></svg>
+        </button>
+        <input id="volume" class="slider" type="range" min="0" max="100" step="1" value="80" aria-label="Volume">
+      </div>
+    </footer>
+
+    <audio id="audio-player" preload="metadata"></audio>
+  </div>
+
+  <!-- Aviso rápido (erros e confirmações) -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Modelo de cada linha da lista; o script.js clona e preenche. -->
+  <template id="track-template">
+    <li class="track">
+      <button type="button" class="track-play">
+        <span class="track-index">
+          <span class="track-number"></span>
+          <svg class="icon track-play-icon" aria-hidden="true"><use href="#icon-play"/></svg>
+          <span class="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        </span>
+        <span class="track-info">
+          <img class="track-cover" alt="" width="40" height="40" loading="lazy">
+          <span class="track-text">
+            <span class="track-title"></span>
+            <span class="track-artist"></span>
+          </span>
+        </span>
+      </button>
+      <span class="track-genre"></span>
+      <button type="button" class="like-btn" aria-pressed="false">
+        <svg class="icon" aria-hidden="true"><use href="#icon-heart-outline"/></svg>
+      </button>
+    </li>
+  </template>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

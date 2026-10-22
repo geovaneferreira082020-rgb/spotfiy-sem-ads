@@ -1,0 +1,22 @@
+{
+  "name": "spotfiy",
+  "version": "2.0.0",
+  "description": "Clone do Spotify Web com player, login JWT e músicas curtidas salvas em SQLite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "covers": "node update_covers.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "sqlite3": "^5.1.7"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,24 @@
+# Dependências
+node_modules/
+
+# Segredos e configuração local (use o .env.example como modelo)
+.env
+
+# Banco de dados SQLite (cada ambiente cria o seu)
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+
+# Backup gerado pelo update_covers.js
+songs.json.bak
+
+# Logs
+*.log
+npm-debug.log*
+
+# Arquivos de editor e sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
